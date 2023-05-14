@@ -9,4 +9,6 @@ public interface IPersonaRepository extends JpaRepository<PersonaEntity, Long> {
 
     Optional<PersonaEntity> findByDocumentoIdentidad(String documentoIdentidad);
 
+    Boolean existsByDocumentoIdentidad(String documentoIdentidad);
+
 }

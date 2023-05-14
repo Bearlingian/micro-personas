@@ -5,27 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
-
 @Entity
-@Table(name = "persona")
+@Table(name = "rol")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class PersonaEntity {
+public class RolEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String nombre;
-    private String apellido;
-    @Column(unique = true, nullable = false, length = 20)
-    private String documentoIdentidad;
-    private String celular;
-    private String fechaNacimiento;
-    private String email;
-    private String password;
+
+    private String descripcion;
+
 }

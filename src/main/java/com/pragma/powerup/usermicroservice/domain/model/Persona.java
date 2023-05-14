@@ -9,13 +9,14 @@ public class Persona {
     private String apellido;
     private String documentoIdentidad;
     private String celular;
-    private Date fechaNacimiento;
+    private String fechaNacimiento;
     private String email;
     private String password;
-    private Long id_rol;
 
+    public Persona() {
+    }
 
-    public Persona(Long id, String nombre, String apellido, String documentoIdentidad, String celular, Date fechaNacimiento, String email, String password, Long id_rol) {
+    public Persona(Long id, String nombre, String apellido, String documentoIdentidad, String celular, String fechaNacimiento, String email, String password) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -24,7 +25,7 @@ public class Persona {
         this.fechaNacimiento = fechaNacimiento;
         this.email = email;
         this.password = password;
-        this.id_rol = id_rol;
+
     }
 
     public Long getId() {
@@ -67,11 +68,11 @@ public class Persona {
         this.celular = celular;
     }
 
-    public Date getFechaNacimiento() {
+    public String getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(String fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -91,11 +92,4 @@ public class Persona {
         this.password = password;
     }
 
-    public Long getId_rol() {
-        return id_rol;
-    }
-
-    public void setId_rol(Long id_rol) {
-        this.id_rol = id_rol;
-    }
 }

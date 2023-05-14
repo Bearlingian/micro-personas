@@ -6,26 +6,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Entity
-@Table(name = "persona")
+@Table(name = "persona_rol")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class PersonaEntity {
+public class PersonaRolEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
+    @JoinColumn(name = "id_persona")
+    private PersonaEntity personaEntity;
+    @ManyToOne
+    @JoinColumn(name = "id_rol")
+    private RolEntity rolEntity;
 
-    private String nombre;
-    private String apellido;
-    @Column(unique = true, nullable = false, length = 20)
-    private String documentoIdentidad;
-    private String celular;
-    private String fechaNacimiento;
-    private String email;
-    private String password;
 }

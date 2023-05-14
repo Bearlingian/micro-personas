@@ -1,16 +1,20 @@
 package com.pragma.powerup.usermicroservice.configuration;
 
+import com.pragma.powerup.usermicroservice.adapters.driven.jpa.mysql.exceptions.ProblemDataTruncateException;
+import com.pragma.powerup.usermicroservice.domain.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
-import static com.pragma.powerup.usermicroservice.configuration.Constants.RESPONSE_ERROR_MESSAGE_KEY;
-import static com.pragma.powerup.usermicroservice.configuration.Constants.WRONG_CREDENTIALS_MESSAGE;
+import static com.pragma.powerup.usermicroservice.configuration.Constants.*;
 
 
 @ControllerAdvice
@@ -22,74 +26,71 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, WRONG_CREDENTIALS_MESSAGE));
     }
 
+    @ExceptionHandler(CamposNulosVacionException.class)
+    public ResponseEntity<Object> handleCamposNulosVacionException(CamposNulosVacionException exception) {
 
-/*
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException ex) {
-        List<String> errorMessages = new ArrayList<>();
-        for (ObjectError error : ex.getBindingResult().getAllErrors()) {
-            if (error instanceof FieldError) {
-                FieldError fieldError = (FieldError) error;
-                errorMessages.add(fieldError.getField() + ": " + fieldError.getDefaultMessage());
-            } else {
-                errorMessages.add(error.getDefaultMessage());
-            }
+        if(exception.getMessage() != null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, exception.getMessage()));
+        }else if (exception.getListFieldError().size() != 0){
+            List<String> errorMessages = new ArrayList<>();
+            errorMessages.addAll(exception.getListFieldError());
+            return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
+
+        return null;
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Map<String, String>> handleAuthenticationException(AuthenticationException noDataFoundException) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, WRONG_CREDENTIALS_MESSAGE));
+
+    @ExceptionHandler(EmailFormatException.class)
+    public ResponseEntity<Map<String, String>> handleEmailFormatException(EmailFormatException exception) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, EMAIL_FORMAT_EXCEPTION));
     }
 
-    @ExceptionHandler(NoDataFoundException.class)
-    public ResponseEntity<Map<String, String>> handleNoDataFoundException(NoDataFoundException noDataFoundException) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, NO_DATA_FOUND_MESSAGE));
-    }
-    @ExceptionHandler(PersonAlreadyExistsException.class)
-    public ResponseEntity<Map<String, String>> handlePersonAlreadyExistsException(
-            PersonAlreadyExistsException personAlreadyExistsException) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, PERSON_ALREADY_EXISTS_MESSAGE));
+    @ExceptionHandler(FechaFormatException.class)
+    public ResponseEntity<Map<String, String>> handleFechaFormatException(FechaFormatException exception) {
+
+        if(exception.getMessage() != null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, exception.getMessage()));
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, FECHA_FORMAT_EXCEPTION));
     }
 
-    @ExceptionHandler(MailAlreadyExistsException.class)
-    public ResponseEntity<Map<String, String>> handleMailAlreadyExistsException(
-            MailAlreadyExistsException mailAlreadyExistsException) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, MAIL_ALREADY_EXISTS_MESSAGE));
+    @ExceptionHandler(PhoneFormatException.class)
+    public ResponseEntity<Map<String, String>> handlePhoneFormatException(PhoneFormatException exception) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, PHONE_FORMAT_EXCEPTION));
     }
-    @ExceptionHandler(PersonNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handlePersonNotFoundException(
-            PersonNotFoundException personNotFoundException) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, PERSON_NOT_FOUND_MESSAGE));
+
+    @ExceptionHandler(DocumentoIdentidadException.class)
+    public ResponseEntity<Map<String, String>> handleDocumentoIdentidadException(DocumentoIdentidadException exception) {
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, exception.getMessage()));
     }
-    @ExceptionHandler(RoleNotAllowedForCreationException.class)
-    public ResponseEntity<Map<String, String>> handleRoleNotAllowedForCreationException(
-            RoleNotAllowedForCreationException roleNotAllowedForCreationException) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, ROLE_NOT_ALLOWED_MESSAGE));
+
+    @ExceptionHandler(GeneralMessageException.class)
+    public ResponseEntity<Map<String, String>> handleGeneralMessageException(GeneralMessageException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, exception.getMessage()));
     }
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<Map<String, String>> handleUserAlreadyExistsException(
-            UserAlreadyExistsException userAlreadyExistsException) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, USER_ALREADY_EXISTS_MESSAGE));
+
+    @ExceptionHandler(ProblemDataTruncateException.class)
+    public ResponseEntity<Map<String, String>> handleProblemDataTruncateException(ProblemDataTruncateException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, exception.getMessage()));
     }
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleUserNotFoundException(
-            UserNotFoundException userNotFoundException) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, USER_NOT_FOUND_MESSAGE));
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, Constants.HTTP_PETICION_EXCEPTION));
     }
-    @ExceptionHandler(RoleNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleRoleNotFoundException(
-            RoleNotFoundException roleNotFoundException) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Collections.singletonMap(RESPONSE_ERROR_MESSAGE_KEY, ROLE_NOT_FOUND_MESSAGE));
-    }*/
+
+
 }

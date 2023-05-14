@@ -1,5 +1,6 @@
 package com.pragma.powerup.usermicroservice.configuration;
 
+import com.pragma.powerup.usermicroservice.adapters.driving.http.dto.request.PropietarioRequestDto;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
@@ -23,6 +24,8 @@ public class OpenApiConfiguration {
                 .addProperty("message", new StringSchema().example("string"));
         Schema<?> errorSchema = new Schema<Map<String, String>>()
                 .addProperty("error", new StringSchema().example("string"));
+
+
         return new OpenAPI()
                 .info(new Info()
                         .title(Constants.SWAGGER_TITLE_MESSAGE)

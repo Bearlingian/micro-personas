@@ -18,25 +18,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.Map;
-@Tag(name = "Personas")
+@Tag(name = "Accounts")
 @RestController
-@RequestMapping("/Personas")
+@RequestMapping("/account")
 @RequiredArgsConstructor
 public class PersonaRestController {
 
     private final IPersonaHandler personaHandler;
 
-    @Operation(summary = "Agregar Propietario", tags = {"Personas"},
+    @Operation(summary = "", tags = {"Accounts"},
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Person created",
+                    @ApiResponse(responseCode = "201", description = "owner created",
                             content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Map"))),
                     @ApiResponse(responseCode = "409", description = "Person already exists",
                             content = @Content(mediaType = "application/json", schema = @Schema(ref = "#/components/schemas/Error")))})
-    @PostMapping("/add/propietario")
+    @PostMapping("/add/provaider")
     public ResponseEntity<Map<String, String>> savePropietario(@RequestBody PropietarioRequestDto requestDto) {
         personaHandler.savePropietario(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Collections.singletonMap(Constants.RESPONSE_MESSAGE_KEY, Constants.PROPIETARIO_CREATED_MESSAGE));
+                .body(Collections.singletonMap(Constants.RESPONSE_MESSAGE_KEY, Constants.ACCOUNT_CREATED_MESSAGE));
     }
 
 }

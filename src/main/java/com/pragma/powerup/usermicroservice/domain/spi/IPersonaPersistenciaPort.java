@@ -4,6 +4,8 @@ import com.pragma.powerup.usermicroservice.domain.model.Persona;
 
 public interface IPersonaPersistenciaPort {
 
-    void savePropietario(Persona persona);
+    Long savePerson(Persona persona);
+
+    Boolean existsDocumentoIdentidad(String documentoIdentidad);
 
 }
